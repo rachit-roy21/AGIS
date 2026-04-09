@@ -1,77 +1,30 @@
 # AGIS
 
-AGIS - Final Product
+AGIS is a local-first security tool for masking and unmasking sensitive information (PII).
 
-## 🏗️ Project Structure
+## Core Functionality
 
-```
-AGIS/
-├── backend/                 # FastAPI backend application
-├── frontend/               # Frontend application
-├── infrastructure/         # Infrastructure components (database, redis, modal)
-├── tests/                  # Test files and data
-├── docs/                   # Documentation
-├── scripts/                # Utility scripts
-├── logs/                   # Log files
-└── docker-compose.yml      # Main docker configuration
-```
+- **Data Interception**: Detects names, emails, and phone numbers in raw text.
+- **Local Masking**: Replaces sensitive data with secure tokens (TOKEN_...).
+- **Private Vault**: Stores masked data locally in your browser using AES-256-GCM encryption.
+- **Information Rehydration**: Locally recovers the original text from tokens without sending sensitive data to the network.
 
-## 🚀 Quick Start
+## Project Structure
 
-1. **Start the services:**
+- `frontend/`: Single-page application for text sanitization.
+- `backend/`: Core API for session management.
+
+## Setup
+
+1. **Frontend**:
    ```bash
-   docker-compose up -d
+   cd frontend
+   npm install
+   npm run dev
    ```
-
-2. **Create a session:**
+2. **Backend**:
    ```bash
-   curl -X POST "http://localhost:8000/api/auth/session"
+   cd backend
+   pip install -r requirements.txt
+   uvicorn app.main:app
    ```
-
-3. **Sanitize text:**
-   ```bash
-   curl -X POST \
-     -H "session-id: [SESSION_ID]" \
-     -H "processing-id: [UUID]" \
-     -H "Content-Type: application/json" \
-     -d '{"text":"Your text here"}' \
-     "http://localhost:8000/api/sanitize/text"
-   ```
-
-## 📚 API Documentation
-
-### Authentication
-- `POST /api/auth/session` - Create a new session
-
-### Sanitization
-- `POST /api/sanitize/text` - Sanitize text content
-- `POST /api/sanitize/pdf` - Sanitize PDF files
-- `GET /api/sanitize/outputs/{processing_id}` - Get outputs by processing ID
-- `GET /api/sanitize/outputs/session/{session_id}` - Get outputs by session
-
-### Health
-- `GET /api/health` - Health check endpoint
-
-## 🔧 Development
-
-### Backend
-- **Framework:** FastAPI
-- **Database:** PostgreSQL
-- **Cache:** Redis
-- **Sanitization:** Gemini AI
-
-### Environment Variables
-Create a `.env` file with:
-```
-GEMINI_API_KEY=your_gemini_api_key
-DATABASE_URL=postgresql://agis:password@localhost:5432/agis
-REDIS_URL=redis://localhost:6379
-```
-
-## 🧪 Testing
-
-Test files and data are located in the `tests/data/` directory.
-
-## 📝 License
-
-[Add your license information here]
