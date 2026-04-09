@@ -6,8 +6,6 @@
  * 2. Falls back to high-quality local simulation on speed/quota issues
  */
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyC-APh65MTcognXgtdd_FRGpyUNHRehrM4';
-
 export interface AIResponse {
   text: string;
   isError: boolean;
@@ -18,20 +16,19 @@ export async function askGemini(maskedText: string): Promise<AIResponse> {
   const primaryToken = tokensFound[0] || '[TOKEN_USER]';
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+    // Calling the Vercel Serverless Proxy instead of direct Google API to bypass CORS
+    const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: `You are a private assistant. Reference users by their tokens like ${primaryToken}. Request: ${maskedText}` }] }]
-      })
+      body: JSON.stringify({ maskedText })
     });
 
     if (response.ok) {
       const data = await response.json();
-      return { text: data.candidates[0].content.parts[0].text, isError: false };
+      return { text: data.text, isError: false };
     }
     
-    throw new Error('API Quota Reached');
+    throw new Error('Proxy or API issue');
   } catch {
     // SMART FALLBACK - 100% Success rate for demonstrations
     console.log('[AGIS] API Busy. Activating Secure Local Intelligence.');
