@@ -1,7 +1,7 @@
 {
   "name": "agis-frontend",
   "version": "1.0.0",
-  "description": "Security-critical vault frontend for privacy-first tokenization platform",
+  "description": "AGIS - Final Product",
   "private": true,
   "type": "module",
   "scripts": {

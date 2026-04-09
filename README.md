@@ -1,6 +1,6 @@
 # AGIS
 
-A privacy-first document sanitization and processing system.
+AGIS - Final Product
 
 ## 🏗️ Project Structure
 
