@@ -1,0 +1,7 @@
+# requirements for modal infra
+PyMuPDF==1.23.8
+Pillow==10.1.0
+ollama==0.1.6
+pydantic==2.5.0
+cryptography==41.0.7
+modal
