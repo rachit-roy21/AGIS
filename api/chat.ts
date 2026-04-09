@@ -33,19 +33,24 @@ export default async function handler(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `You are a private assistant. Reference users by their tokens. Request: ${maskedText}` }] }]
+        contents: [{ 
+          parts: [{ 
+            text: `You are a helpful assistant. Use these tokens to refer to private entities: ${maskedText}` 
+          }] 
+        }]
       })
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('[Gemini Proxy Error]', data);
-      return res.status(response.status).json({ error: data.error?.message || 'Gemini API Error' });
+      return res.status(200).json({ 
+        text: `(PROXY_ERROR) ${data.error?.message || 'Upstream Error'}`,
+        rawError: data
+      });
     }
 
     const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from AI.';
-    
     return res.status(200).json({ text: aiText });
   } catch (error) {
     console.error('[Serverless Proxy Failure]', error);

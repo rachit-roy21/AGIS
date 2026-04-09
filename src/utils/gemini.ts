@@ -25,6 +25,12 @@ export async function askGemini(maskedText: string): Promise<AIResponse> {
 
     if (response.ok) {
       const data = await response.json();
+      
+      // If the proxy succeeded but the AI itself returned a Quota error, trigger demo mode
+      if (data.text.includes('(PROXY_ERROR)')) {
+        throw new Error('API Quota Reached');
+      }
+
       return { text: data.text, isError: false };
     }
     
