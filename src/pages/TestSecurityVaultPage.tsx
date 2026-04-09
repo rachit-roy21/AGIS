@@ -287,8 +287,12 @@ export function TestSecurityVaultPage() {
                 {/* Private AI Interaction Region */}
                 <div className="mt-8 pt-8 border-t border-[#f4f2ee]">
                   <div className="flex items-center justify-between mb-6">
-                    <label className="text-xs uppercase tracking-[0.2em] text-[#ff5500] font-black">
-                      4_ PRIVATE INTELLIGENCE (GEMINI)
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#ff5500] font-black flex items-center gap-3">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff5500] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff5500]"></span>
+                      </span>
+                      4_ AGIS INTELLIGENCE AUDIT
                     </label>
                   </div>
                   
@@ -300,27 +304,49 @@ export function TestSecurityVaultPage() {
                     >
                       {aiLoading ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          CONSULTING GEMINI...
+                          <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Sequencing Payload...
                         </>
                       ) : (
                         <>
-                          <span>❋</span> ASK GEMINI (MASKED)
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.040L4 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622l-.382-3.016z" /></svg>
+                          RUN SECURITY AUDIT
                         </>
                       )}
                     </button>
                   ) : (
                     <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                      <div className="p-8 bg-[#1f1e1c] text-white rounded-3xl text-base md:text-lg leading-relaxed shadow-2xl border border-white/5 relative overflow-hidden">
+                      <div className="p-8 bg-[#1f1e1c] text-[#e8e5df] rounded-3xl font-mono text-sm sm:text-base leading-loose shadow-2xl border border-white/10 relative overflow-hidden group">
                         {/* Shimmer effect for AI response */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ff5500] to-transparent animate-[shine_3s_ease-in-out_infinite]" />
-                        <p className="whitespace-pre-wrap">{aiResponse}</p>
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5500] to-transparent animate-[shine_3s_ease-in-out_infinite]" />
+                        
+                        <div className="flex flex-col gap-1">
+                          {aiResponse.split('\n').map((line, i) => {
+                            // Simple parser for **bold** and bullet points
+                            const isHeader = line.startsWith('**');
+                            const cleanLine = line.replace(/\*\*/g, '');
+                            
+                            return (
+                              <p key={i} className={`${isHeader ? 'text-[#ff5500] font-bold mt-2 text-xs tracking-widest uppercase mb-1' : 'opacity-90'} ${line.trim() === '' ? 'h-3' : ''}`}>
+                                {cleanLine.startsWith('- ') ? '  └ ' + cleanLine.substring(2) : cleanLine}
+                              </p>
+                            );
+                          })}
+                        </div>
+
+                        {/* Scanline effect */}
+                        <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
                       </div>
+                      
                       <button 
-                         onClick={() => { setAiResponse(null); handleAskGemini(); }}
-                         className="text-[10px] tracking-widest font-bold text-[#63615b] uppercase hover:text-[#1f1e1c] transition-colors self-end"
+                        onClick={() => setAiResponse(null)}
+                        className="text-[10px] tracking-[0.3em] font-bold text-[#63615b] uppercase hover:text-[#1f1e1c] transition-colors self-center flex items-center gap-2"
                       >
-                        RE-GENERATE AI RESPONSE ↺
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        RE-SCAN PAYLOAD
                       </button>
                     </div>
                   )}
