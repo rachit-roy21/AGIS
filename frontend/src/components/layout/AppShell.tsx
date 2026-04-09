@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useSession } from '../../contexts/SessionContext';
 import { useSecurity } from '../../contexts/SecurityContext';
 
 interface AppShellProps {
@@ -7,6 +8,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const { isSecure } = useSecurity();
+  const { session, clearSession } = useSession();
 
   return (
     <div className="min-h-screen bg-[#f6f4f0] text-[#1f1e1c] font-sans relative selection:bg-[#ff8a3d]/20 selection:text-[#ff8a3d]">
@@ -23,12 +25,22 @@ export function AppShell({ children }: AppShellProps) {
             <span className="text-2xl leading-none">❋</span> AGIS
           </div>
 
-          <button 
-            onClick={() => document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-[#fcfaf8] text-[#1f1e1c] hover:bg-white text-sm font-bold tracking-widest px-8 py-2.5 rounded-full transition-all shadow-sm"
-          >
-            TRY →
-          </button>
+          <div className="flex items-center gap-4">
+            {session.isActive && (
+              <button 
+                onClick={clearSession}
+                className="text-white/70 hover:text-white text-sm font-bold tracking-widest px-4 py-2 transition-all"
+              >
+                LOGOUT
+              </button>
+            )}
+            <button 
+              onClick={() => document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-[#fcfaf8] text-[#1f1e1c] hover:bg-white text-sm font-bold tracking-widest px-8 py-2.5 rounded-full transition-all shadow-sm"
+            >
+              TRY →
+            </button>
+          </div>
         </header>
 
         {/* Security Warning Banner (if insecure) */}
