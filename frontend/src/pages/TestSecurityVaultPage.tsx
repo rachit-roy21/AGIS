@@ -7,6 +7,7 @@ import { useVault } from '../hooks/useVault';
 import { useSession } from '../contexts/SessionContext';
 import { useDetokenizer } from '../hooks/useDetokenizer';
 import { getApiClient, generateProcessingId } from '../utils/api';
+import { askGemini } from '../utils/gemini';
 import type { VaultStats } from '../utils/types';
 
 interface TestState {
@@ -34,7 +35,9 @@ export function TestSecurityVaultPage() {
 
   const [vaultStats, setVaultStats] = useState<VaultStats | null>(null);
   const [textTestResult, setTextTestResult] = useState<TextTestResult | null>(null);
+  const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const handleInitializeSession = async () => {
     setLoading(true);
@@ -62,6 +65,7 @@ export function TestSecurityVaultPage() {
   useEffect(() => {
     if (!session.isActive) {
       setTextTestResult(null);
+      setAiResponse(null);
       setVaultStats(null);
       setTestState({
         lastError: null,
@@ -112,6 +116,36 @@ export function TestSecurityVaultPage() {
       setTestState((prev) => ({ ...prev, lastError: `INTERCEPT FAILED: ${message}`, lastSuccess: null }));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAskGemini = async () => {
+    if (!textTestResult?.sanitized) return;
+    
+    setAiLoading(true);
+    setTestState(prev => ({ ...prev, lastError: null }));
+
+    try {
+      const result = await askGemini(textTestResult.sanitized);
+      
+      if (result.isError) {
+        setTestState(prev => ({ ...prev, lastError: result.text }));
+        return;
+      }
+
+      // Rehydrate AI response locally
+      const rehydratedResponse = await detokenize(result.text);
+      setAiResponse(rehydratedResponse);
+      
+      setTestState(prev => ({ 
+        ...prev, 
+        lastSuccess: 'PRIVATE AI RESPONSE RECEIVED' 
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setTestState(prev => ({ ...prev, lastError: `AI INTERFACE ERROR: ${message}` }));
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -248,6 +282,48 @@ export function TestSecurityVaultPage() {
                   <div className="p-6 bg-white border-2 border-[#22c55e]/30 rounded-2xl text-[#1f1e1c] text-base md:text-lg leading-relaxed shadow-sm">
                     {textTestResult.detokenized}
                   </div>
+                </div>
+
+                {/* Private AI Interaction Region */}
+                <div className="mt-8 pt-8 border-t border-[#f4f2ee]">
+                  <div className="flex items-center justify-between mb-6">
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#ff5500] font-black">
+                      4_ PRIVATE INTELLIGENCE (GEMINI)
+                    </label>
+                  </div>
+                  
+                  {!aiResponse ? (
+                    <button
+                      onClick={handleAskGemini}
+                      disabled={aiLoading}
+                      className="w-full py-5 px-8 rounded-2xl bg-[#1f1e1c] text-white text-sm font-bold tracking-widest uppercase hover:bg-black transition-all flex items-center justify-center gap-3 shadow-xl"
+                    >
+                      {aiLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          CONSULTING GEMINI...
+                        </>
+                      ) : (
+                        <>
+                          <span>❋</span> ASK GEMINI (MASKED)
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                      <div className="p-8 bg-[#1f1e1c] text-white rounded-3xl text-base md:text-lg leading-relaxed shadow-2xl border border-white/5 relative overflow-hidden">
+                        {/* Shimmer effect for AI response */}
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ff5500] to-transparent animate-[shine_3s_ease-in-out_infinite]" />
+                        <p className="whitespace-pre-wrap">{aiResponse}</p>
+                      </div>
+                      <button 
+                         onClick={() => { setAiResponse(null); handleAskGemini(); }}
+                         className="text-[10px] tracking-widest font-bold text-[#63615b] uppercase hover:text-[#1f1e1c] transition-colors self-end"
+                      >
+                        RE-GENERATE AI RESPONSE ↺
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
