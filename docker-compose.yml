@@ -1,10 +1,11 @@
 services:
 
   postgres:
+    container_name: agis-db
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: vaultsim
-      POSTGRES_USER: vaultsim
+      POSTGRES_DB: agis
+      POSTGRES_USER: agis
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"

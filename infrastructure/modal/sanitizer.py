@@ -21,7 +21,7 @@
 # # Define Modal stub
 # # TEMP: Disable Modal infra while testing Gemini locally
 # if False:
-#     app = modal.App("vaultsim-privacy-shield")
+#     app = modal.App("agis-privacy-shield")
 
 #     image = modal.Image.from_dockerfile(
 #         "Dockerfile",
@@ -36,7 +36,7 @@
 # #     gpu="T4",  # GPU acceleration for Gemma
 # #     timeout=60,  # 60 second max
 # #     memory=8192,  # 8GB RAM
-# #     secret=modal.Secret.from_name("vaultsim-secrets")  # API keys
+# #     secret=modal.Secret.from_name("agis-secrets")  # API keys
 # # )
 # def sanitize_document(pdf_base64: str, session_id: str) -> Dict:
 #     """

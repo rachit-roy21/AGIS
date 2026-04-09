@@ -5,7 +5,7 @@ A privacy-first document sanitization and processing system.
 ## 🏗️ Project Structure
 
 ```
-VaultSim/
+AGIS/
 ├── backend/                 # FastAPI backend application
 ├── frontend/               # Frontend application
 ├── infrastructure/         # Infrastructure components (database, redis, modal)
@@ -64,7 +64,7 @@ VaultSim/
 Create a `.env` file with:
 ```
 GEMINI_API_KEY=your_gemini_api_key
-DATABASE_URL=postgresql://vaultsim:password@localhost:5432/vaultsim
+DATABASE_URL=postgresql://agis:password@localhost:5432/agis
 REDIS_URL=redis://localhost:6379
 ```
 

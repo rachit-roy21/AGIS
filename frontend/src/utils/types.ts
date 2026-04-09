@@ -1,5 +1,5 @@
 /**
- * Type definitions for VaultSim frontend
+ * Type definitions for AGIS frontend
  */
 
 export interface VaultStats {

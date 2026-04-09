@@ -1,5 +1,5 @@
 {
-  "name": "vaultsim-frontend",
+  "name": "agis-frontend",
   "version": "1.0.0",
   "description": "Security-critical vault frontend for privacy-first tokenization platform",
   "private": true,
