@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.sanitize import router as sanitize_router
-from app.api.debate import router as debate_router
 from app.middleware.rate_limit_middleware import RateLimitMiddleware
 from app.middleware.session_validator import SessionValidatorMiddleware
 
@@ -10,7 +9,6 @@ from app.core.database import engine, Base
 import app.models.session
 import app.models.audit_log
 import app.models.sanitized_output
-import app.models.debate
 
 # Create tables on startup
 Base.metadata.create_all(bind=engine)
@@ -70,7 +68,6 @@ app.add_middleware(
 # Register API routes
 app.include_router(sanitize_router)
 app.include_router(auth_router)
-app.include_router(debate_router)
 
 
 @app.get("/")
