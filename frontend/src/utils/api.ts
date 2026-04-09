@@ -190,7 +190,7 @@ class ApiClient {
    */
   async createSession(): Promise<SessionCreateResponse> {
     const response = {
-      session_id: "mock-session-" + Math.random().toString(36).substring(7),
+      session_id: crypto.randomUUID(),
       challenge: "mock-challenge-which-is-definitely-long-enough-to-pass-security-validation-1234567890",
       expires_in: 3600
     };

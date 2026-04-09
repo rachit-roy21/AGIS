@@ -2,7 +2,7 @@
  * TEST SECURITY VAULT PAGE - Reference Design Match (Larger Sans-Serif Typography)
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useVault } from '../hooks/useVault';
 import { useSession } from '../contexts/SessionContext';
 import { useDetokenizer } from '../hooks/useDetokenizer';
@@ -57,6 +57,21 @@ export function TestSecurityVaultPage() {
       setLoading(false);
     }
   };
+
+  // Reset state on logout
+  useEffect(() => {
+    if (!session.isActive) {
+      setTextTestResult(null);
+      setVaultStats(null);
+      setTestState({
+        lastError: null,
+        lastSuccess: null,
+      });
+      // Clear textarea if it exists
+      const textArea = document.getElementById('textInput') as HTMLTextAreaElement;
+      if (textArea) textArea.value = "My name is John Doe and my phone number is 567898767892.";
+    }
+  }, [session.isActive]);
 
   const handleTextSanitization = async (inputText: string) => {
     if (!session.id) {
