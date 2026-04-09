@@ -29,7 +29,7 @@ export class Vault {
   private cryptoKey: CryptoKey | null = null;
   private cache: Map<string, string> = new Map();
   private sessionId: string = '';
-  private dbName: string = 'VaultSim-Vault';
+  private dbName: string = 'AGIS-Vault';
   private storeName: string = 'tokens';
   private ready: boolean = false;
   private listeners: (() => void)[] = [];

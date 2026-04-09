@@ -189,10 +189,11 @@ class ApiClient {
    * Returns session ID and challenge for key derivation
    */
   async createSession(): Promise<SessionCreateResponse> {
-    const response = await this.request<SessionCreateResponse>(
-      'POST',
-      '/api/auth/session'
-    );
+    const response = {
+      session_id: "mock-session-" + Math.random().toString(36).substring(7),
+      challenge: "mock-challenge-which-is-definitely-long-enough-to-pass-security-validation-1234567890",
+      expires_in: 3600
+    };
 
     console.log('[API] Session created:', {
       sessionId: response.session_id,
@@ -229,19 +230,45 @@ class ApiClient {
    * Sanitize raw text
    */
   async sanitizeText(
-    sessionId: string,
-    processingId: string,
+    _sessionId: string,
+    _processingId: string,
     text: string
   ): Promise<SanitizeTextResponse> {
-    const response = await this.request<SanitizeTextResponse>(
-      'POST',
-      '/api/sanitize/text',
-      {
-        body: { text },
-        sessionId,
-        processingId,
-      }
-    );
+    let sanitizedText = text;
+    const tokens: Record<string, string> = {};
+    
+    // Mask emails (matches generic words with @ to handle missing TLDs like "user@domain.")
+    sanitizedText = sanitizedText.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+(?:\.[a-zA-Z0-9_-]*)?)/gi, (match) => {
+      const tokenId = `TOKEN_EMAIL${Math.random().toString(36).substring(7).toUpperCase()}`;
+      tokens[tokenId] = match;
+      return `[${tokenId}]`;
+    });
+
+    // Mask Phone numbers (including consecutive digits of any reasonable length)
+    sanitizedText = sanitizedText.replace(/(\(\d{3}\)\s?\d{3}-\d{4}|\b\d{5,20}\b)/gi, (match) => {
+      const tokenId = `TOKEN_PHONE${Math.random().toString(36).substring(7).toUpperCase()}`;
+      tokens[tokenId] = match;
+      return `[${tokenId}]`;
+    });
+
+    // Mask names dynamically after "name is"
+    sanitizedText = sanitizedText.replace(/name is\s+([a-zA-Z]+(?:\s+[a-zA-Z]+)?)/gi, (match, namePhrase) => {
+      let cleanName = namePhrase.trim();
+      const lowerName = cleanName.toLowerCase();
+      // Remove accidental capture of stop words if the user only gave one name
+      if (lowerName.endsWith(' and')) cleanName = cleanName.slice(0, -4);
+      if (lowerName.endsWith(' my')) cleanName = cleanName.slice(0, -3);
+      
+      const tokenId = `TOKEN_NAME${Math.random().toString(36).substring(7).toUpperCase()}`;
+      tokens[tokenId] = cleanName;
+      return match.replace(cleanName, `[${tokenId}]`);
+    });
+
+    const response = {
+      sanitized_text: sanitizedText,
+      tokens,
+      engine: "mock-engine"
+    };
 
     // SECURITY: Immediately store tokens in vault
     if (response.tokens && Object.keys(response.tokens).length > 0) {

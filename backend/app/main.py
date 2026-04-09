@@ -15,7 +15,7 @@ import app.models.debate
 # Create tables on startup
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="VaultSim API")
+app = FastAPI(title="AGIS API")
 
 # Register middleware in correct order (Outermost to Innermost):
 # 1. CORSMiddleware (MUST be outermost for preflights)
@@ -81,4 +81,4 @@ def root():
 @app.get("/api/health")
 def health_check():
     """Health check endpoint for frontend monitoring"""
-    return {"status": "healthy", "service": "VaultSim API", "version": "1.0.0"}
+    return {"status": "healthy", "service": "AGIS API", "version": "1.0.0"}

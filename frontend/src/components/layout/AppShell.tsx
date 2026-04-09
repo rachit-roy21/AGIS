@@ -1,7 +1,4 @@
 import { ReactNode } from 'react';
-import { Header } from './Header';
-import { Navigation } from './Navigation';
-import { useSession } from '../../contexts/SessionContext';
 import { useSecurity } from '../../contexts/SecurityContext';
 
 interface AppShellProps {
@@ -9,56 +6,45 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
-  const { isSessionValid } = useSession();
   const { isSecure } = useSecurity();
 
-  const isAppHealthy = isSecure && isSessionValid();
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
+    <div className="min-h-screen bg-[#f6f4f0] text-[#1f1e1c] font-sans relative selection:bg-[#ff8a3d]/20 selection:text-[#ff8a3d]">
+      {/* Grid Background overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none mix-blend-multiply opacity-70" style={{
+        backgroundSize: '40px 40px',
+        backgroundImage: 'linear-gradient(to right, #e8e5df 1px, transparent 1px), linear-gradient(to bottom, #e8e5df 1px, transparent 1px)'
+      }} />
 
-      {/* Navigation */}
-      <Navigation />
+      {/* Floating Header Pill */}
+      <div className="relative z-20 pt-6 px-4 sm:px-10 lg:px-14">
+        <header className="bg-[#acaa9f] rounded-full px-8 py-4 flex items-center justify-between shadow-sm border border-black/5">
+          <div className="flex items-center gap-3 text-white font-bold text-2xl tracking-wide">
+            <span className="text-2xl leading-none">❋</span> AGIS
+          </div>
 
-      {/* Security Warning Banner */}
-      {!isSecure && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <span className="text-red-400">⚠️</span>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-700">
-                Security issues detected. Please check your session and contact support if needed.
+          <button className="bg-[#fcfaf8] text-[#1f1e1c] hover:bg-white text-sm font-bold tracking-widest px-8 py-2.5 rounded-full transition-all shadow-sm">
+            TRY →
+          </button>
+        </header>
+
+        {/* Security Warning Banner (if insecure) */}
+        {!isSecure && (
+          <div className="mt-4 bg-red-50/90 backdrop-blur-sm border-l-4 border-red-500 rounded-r-xl p-4 shadow-sm relative z-20">
+            <div className="flex">
+              <span className="text-red-500 mr-3 text-xl">⚠️</span>
+              <p className="text-base text-red-800 font-medium">
+                Security issues detected. Local crypto context may be compromised.
               </p>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          {children}
-        </div>
+      {/* Main Page Area */}
+      <main className="relative z-10 px-4 sm:px-10 lg:px-14 pb-10 flex-1">
+        {children}
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center text-sm text-gray-500">
-            <div>
-              © 2024 VaultSim - Privacy-First Tokenization Platform
-            </div>
-            <div className="flex space-x-4">
-              <span>Status: {isAppHealthy ? '✅ Operational' : '⚠️ Issues Detected'}</span>
-              <span>Environment: Production</span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

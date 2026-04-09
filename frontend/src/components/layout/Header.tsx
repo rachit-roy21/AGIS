@@ -36,7 +36,7 @@ export function Header() {
           {/* Logo and Title */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-gray-900">VaultSim</h1>
+              <h1 className="text-xl font-bold text-gray-900">AGIS</h1>
             </div>
             <div className="ml-4 hidden md:block">
               <p className="text-sm text-gray-500">Privacy-First Tokenization Platform</p>
