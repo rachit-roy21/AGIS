@@ -23,7 +23,10 @@ export function AppShell({ children }: AppShellProps) {
             <span className="text-2xl leading-none">❋</span> AGIS
           </div>
 
-          <button className="bg-[#fcfaf8] text-[#1f1e1c] hover:bg-white text-sm font-bold tracking-widest px-8 py-2.5 rounded-full transition-all shadow-sm">
+          <button 
+            onClick={() => document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-[#fcfaf8] text-[#1f1e1c] hover:bg-white text-sm font-bold tracking-widest px-8 py-2.5 rounded-full transition-all shadow-sm"
+          >
             TRY →
           </button>
         </header>
@@ -42,7 +45,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       {/* Main Page Area */}
-      <main className="relative z-10 px-4 sm:px-10 lg:px-14 pb-10 flex-1">
+      <main id="main-content" className="relative z-10 px-4 sm:px-10 lg:px-14 pb-10 flex-1">
         {children}
       </main>
     </div>
