@@ -1,4 +1,4 @@
-# VaultSim
+# AGIS
 
 A privacy-first document sanitization and processing system.
 
