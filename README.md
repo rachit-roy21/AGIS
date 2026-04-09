@@ -5,26 +5,20 @@ AGIS is a local-first security tool for masking and unmasking sensitive informat
 ## Core Functionality
 
 - **Data Interception**: Detects names, emails, and phone numbers in raw text.
-- **Local Masking**: Replaces sensitive data with secure tokens (TOKEN_...).
+- **Local Masking**: Replaces sensitive data with unique secure tokens (`TOKEN_...`).
 - **Private Vault**: Stores masked data locally in your browser using AES-256-GCM encryption.
-- **Information Rehydration**: Locally recovers the original text from tokens without sending sensitive data to the network.
+- **Information Rehydration**: Locally recovers original text from tokens for authorized viewing.
 
 ## Project Structure
 
-- `frontend/`: Single-page application for text sanitization.
-- `backend/`: Core API for session management.
+- `frontend/`: The complete AGIS application (Vite + React).
 
-## Setup
+## Setup & Development
 
-1. **Frontend**:
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-2. **Backend**:
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   uvicorn app.main:app
-   ```
+1. **Navigate to app**: `cd frontend`
+2. **Install**: `npm install`
+3. **Run**: `npm run dev`
+
+## Deployment
+
+This project is optimized for **Vercel**. Deploy by pushing the `frontend/` directory to your project.
